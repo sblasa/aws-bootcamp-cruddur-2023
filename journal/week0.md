@@ -9,3 +9,5 @@
 ## Install AWS CLI
 
 I was able to install AWS CLI in Gitpod. At first, I came across an error, but I saw in the instructional video showed how to fix the error. I used that information to fix the error.
+
+Okay, so I got distracted by other things (life), and so my gitpod workspace would time out, and then I had to finish reinstalling AWS CLI.
