@@ -18,7 +18,17 @@ This part was easy. I had forgotten to generate the keys after I created the IAM
 
 I haven't generated the MFA yet because I'm trying to clean up my Authy MFA app since I messed it up last time with my other AWS account that I created last year. I had switched phones, and forgot that I had my AWS MFA configured there. Not good. You don't want to be contacting AWS support on a Sunday evening to see if you can get account access. I mean he was pretty nice, but the support rep had said it would take a few days to confirm who I was before I could get my account access back. Ugh, what? I'm looking for the crying emoji, but since I'm a n00b with markdown, I'll just have to put in a table flip emoji. (┛ಠ_ಠ)┛彡┻━┻ (I use these quite often at work with my co-workers when there's a production issue, or just for fun.)
 
-Fortunately, I forgot I had installed the Authy application on my desktop as well, so I had the AWS account configured there too. I contacted support back to let them know to stand down. I got my access back, so no need to do a background check (google) on me to see if I was who I claimed to be. ┳━┳ ヽ(ಠل͜ಠ)ﾉ (This is putting the tables back emoji.) 
+Fortunately, I forgot I had installed the Authy application on my desktop as well, so I had the AWS account configured there too. I contacted support back to let them know to stand down. I got my access back, so no need to do a background check (google) on me to see if I was who I claimed to be. ┳━┳ ヽ(ಠل͜ಠ)ﾉ (This is putting the tables back emoji.)
+
+## Using Cloudshell
+
+I've never had the opportunity to use cloud shell. I don't know how often I would use it, but it would be good to know that I have this tool available.
+![Screenshot of CloudShell](assets/week0/week0_cloudtrail0.png) 
+
+This also allowed me to see the different commands that are avaialable for the AWS CLI. At work, I usually use the AWS SDK with the IDE that I use, more than the AWS CLI. Of course, that could change. Thankfully, I didn't have any issues using CloudShell, except the spelling of CloudShell, which I thought was spelled "Cloudshell", but I guess the marketing/product people had other ideas.
+
+## Generate AWS Credentials
+As I mentioned earlier, I forgot to generate the AWS credentials when I created my admin IAM user, so I went back into the IAM user that I used and generated the secret and key. There wasn't much to do there, aside from making sure I didn't delete the key and secret. 
 
 ## Install AWS CLI
 
