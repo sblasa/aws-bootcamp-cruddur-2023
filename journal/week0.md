@@ -32,6 +32,15 @@ As I mentioned earlier, I forgot to generate the AWS credentials when I created 
 
 ## Install AWS CLI
 
-I was able to install AWS CLI in Gitpod. At first, I came across an error, but I saw in the instructional video showed how to fix the error. I used that information to fix the error.
+I was able to install AWS CLI in Gitpod. 
+[Installing AWS CLI in Gitpod](assets/week0/week0_gitpod_cli_install0.png)
+
+
+At first, I came across an error, but I saw in the instructional video showed how to fix the error. I forgot to set my environment variables in gitpod, so it was coming up with an "unable to locate credentials" error message. Oops forgot to set those. Cutting and pasting the code was problem because it was concatenating the strings of the three environment variables together.
+
+Later, I was unable to commit at first because I had the permissions settings for Gitpod set incorectly for my Github repo. 
+I had to set it to this in the screenshot below.
+[Gitpod permissions need to be set correctly](assets/week0/week0_gitpod_permissions_github0.png)
+
 
 Okay, so I got distracted by other things (life), and so my gitpod workspace would time out, and then I had to finish reinstalling AWS CLI.
