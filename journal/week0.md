@@ -40,7 +40,7 @@ At first, I came across an error, but I saw in the instructional video showed ho
 
 Later, I was unable to commit at first because I had the permissions settings for Gitpod set incorectly for my Github repo. 
 I had to set it to this in the screenshot below.
-![Gitpod permissions need to be set correctly](assets/week0/week0_gitpod_permissions_github0.png)
+![Gitpod permissions need to be set correctly](assets/week0/week0_gitpod_permissions_github20.png)
 
 
 Okay, so I got distracted by other things (life), and so my gitpod workspace would time out, and then I had to finish reinstalling AWS CLI.
