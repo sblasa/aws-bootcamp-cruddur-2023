@@ -22,7 +22,7 @@ Fortunately, I forgot I had installed the Authy application on my desktop as wel
 
 ## Using Cloudshell
 
-I've never had the opportunity to use cloud shell. I don't know how often I would use it, but it would be good to know that I have this tool available.
+I've never had the opportunity to use cloudshell. I don't know how often I would use it, but it would be good to know that I have this tool available.
 ![Screenshot of CloudShell](assets/week0/week0_cloudtrail0.png) 
 
 This also allowed me to see the different commands that are avaialable for the AWS CLI. At work, I usually use the AWS SDK with the IDE that I use, more than the AWS CLI. Of course, that could change. Thankfully, I didn't have any issues using CloudShell, except the spelling of CloudShell, which I thought was spelled "Cloudshell", but I guess the marketing/product people had other ideas.
@@ -40,7 +40,20 @@ At first, I came across an error, but I saw in the instructional video showed ho
 
 Later, I was unable to commit at first because I had the permissions settings for Gitpod set incorectly for my Github repo. 
 I had to set it to this in the screenshot below.
+
 ![Gitpod permissions need to be set correctly](assets/week0/week0_gitpod_permissions_github20.png)
 
 
-Okay, so I got distracted by other things (life), and so my gitpod workspace would time out, and then I had to finish reinstalling AWS CLI.
+Okay, so I got distracted by other things (life), and so my gitpod workspace would time out, so that was annoying. Then I had to finish reinstalling AWS CLI because my progress was reset until I updated the gitpod.yml file later on.
+
+## Creating a Billing Alarm 
+I actually created a billing alarm before I added it through the AWS console since I was following along with the Chirag's video, and that was easy to set up. Later on, I created another billing alarm through the AWS CLI. At first the command didn't work because the json file had an extra space in the file. I fixed it by going to a json validator site to validate the error, and it showed what line number it was on. 
+<img width="1175" alt="week0_billingalert0" src="https://user-images.githubusercontent.com/20133223/220000184-99979923-3216-422f-8518-d6fa71a69131.png">
+
+
+## Create A Budget 
+Well, same thing as before, I had added a budget through the AWS console first. Then later on I added another one budget through the AWS CLI just for funzies. Whoops forgot to rename the budget name instead of the example name that was in the json file.
+<img width="1117" alt="week0_budget0" src="https://user-images.githubusercontent.com/20133223/220000224-b029f82a-5701-4090-972b-4a3cadc9aa50.png">
+
+Okay, to sum up, this was a lot more work than I had anticipated, but it was a good experience because I learned a lot of different things, such as the AWS CLI, gitpod (though I probably would use my local IDEs), more Lucidchart info, and CloudShell. 
+
