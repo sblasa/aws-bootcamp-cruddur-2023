@@ -33,8 +33,8 @@ class NotificationsActivities:
     },
     {
       'uuid': '248959df-3079-4947-b847-9e0892d1bab4',
-      'handle':  'Jesus',
-      'message': 'God',
+      'handle':  'holycapedcrusader',
+      'message': 'Imbatman',
       'created_at': (now - timedelta(hours=1)).isoformat(),
       'expires_at': (now + timedelta(hours=12)).isoformat(),
       'likes': 0,
