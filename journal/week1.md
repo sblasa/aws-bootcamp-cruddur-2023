@@ -20,3 +20,8 @@
 ## Installed DynamoDB and Postgres Databases
 - I was abled to add the DynamoDB and Postgres databases to the container. I also added the database explorer extension, and committed it to my gitpod.yml file, so I'd have that available. 
 - The only issue I had was the password wasn't working at first when logging into Postgres, but it's because I misspelled the user name to "postgress", and it should've been spelled "postgres". After that, I was able to do the different commands, like /dl , and so on.
+
+## Homework Challenge(s)
+- I created and ran a Docker image on my local machine and pushed it to DockerHub. This was fairly easy, but I initially forgot to create the package.json file with my frontend Docker image, so it wasn't happy. Later on, I created it after someone told me what the issue was.
+- <img width="1119" alt="2023-03-01_16-23-35" src="https://user-images.githubusercontent.com/20133223/222298317-508a3a4b-570a-44d7-9bd5-236b1aa15b22.png">
+<img width="1119" alt="2023-03-01_16-23-35" src="https://user-images.githubusercontent.com/20133223/222298325-51af42c3-55c3-4c45-9a45-1358bcdd9dda.png">
