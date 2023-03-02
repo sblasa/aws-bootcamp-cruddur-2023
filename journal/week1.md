@@ -8,3 +8,15 @@
     - Learned about Snyk scanning Docker files/images for vulnerabilities
     - AWS Secrets Manager use for database passwords or API passwords and similar types of secrets.
     - It will cost after trial period based on number of secrets created API calls
+
+## Containerized Application
+- Added docker file and docker compose.
+  -  I was able to get it running without any issues, so that was good.
+## Created Notications Endpoint and Notifications Feed in React
+- Added the notifications I've used OpenAPI documentation before. Their documentation on the site is good. I usually use the examples on their to figure out how it works, but it was good to have Andrew explain things on how it worked. It's clearer to me now.
+- I was able to follow along with Andrew's video and create the Notfications endpoint in flask. I can see how he used the Home endpoint as an example to create the Notifications endpoint, so that wasn't too difficult. I changed my data slightly, so I can see my own results.
+- The frontend react page for Notifications was added, and it wasn't difficult to do since I've been using React for three or four months, but I'm still new to that framework. No issues there.
+
+## Installed DynamoDB and Postgres Databases
+- I was abled to add the DynamoDB and Postgres databases to the container. I also added the database explorer extension, and committed it to my gitpod.yml file, so I'd have that available. 
+- The only issue I had was the password wasn't working at first when logging into Postgres, but it's because I misspelled the user name to "postgress", and it should've been spelled "postgres". After that, I was able to do the different commands, like /dl , and so on.
