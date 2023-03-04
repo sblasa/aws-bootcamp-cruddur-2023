@@ -1,15 +1,13 @@
 import './HomeFeedPage.css';
 import React from "react";
 
+import { Auth } from 'aws-amplify';
+
 import DesktopNavigation  from '../components/DesktopNavigation';
 import DesktopSidebar     from '../components/DesktopSidebar';
 import ActivityFeed from '../components/ActivityFeed';
 import ActivityForm from '../components/ActivityForm';
 import ReplyForm from '../components/ReplyForm';
-import { Auth } from 'aws-amplify';
-
-// set a state
-const [user, setUser] = React.useState(null);
 
 // [TODO] Authenication
 import Cookies from 'js-cookie'
@@ -57,12 +55,15 @@ export default function HomeFeedPage() {
     })
     .catch((err) => console.log(err));
   };
-// check when the page loads if we are authenicated
-// check when the page loads if we are authenicated
-React.useEffect(()=>{
-  loadData();
-  checkAuth();
-}, [])
+  
+  React.useEffect(()=>{
+    //prevents double call
+    if (dataFetchedRef.current) return;
+    dataFetchedRef.current = true;
+
+    loadData();
+    checkAuth();
+  }, [])
 
   return (
     <article>
