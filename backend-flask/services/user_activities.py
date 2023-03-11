@@ -4,7 +4,7 @@ class UserActivities:
   def run(user_handle):
     try:
       # xray ---
-      segment = xray_recorder.begin_segment('user_activities')
+      #segment = xray_recorder.begin_segment('user_activities')
 
       model = {
         'errors': None,
