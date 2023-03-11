@@ -11,3 +11,7 @@ Here's my initial segment.
 
 Here's my subsegment. I didn't have it working at first because I hadn't commented out the intial segment.
 <img width="1417" alt="week2_xray_subsegment0" src="https://user-images.githubusercontent.com/20133223/224456833-0df55666-3e63-4c6f-9499-1eb27c09848b.png">
+
+I was able to add the Rollbar tracing, but I had some issues because I didn't fully remove or comment out the xray functions out of the app.py file. Then it started working.
+<img width="1365" alt="week2_rollbar0" src="https://user-images.githubusercontent.com/20133223/224514338-01c741ef-dad3-4c9c-9306-3906b8999724.png">
+
