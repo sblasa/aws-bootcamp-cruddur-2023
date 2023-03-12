@@ -7,3 +7,8 @@ I added preferred_username and name as optional attributes. Then it worked after
 Here's my logged in user screenshot. 
 
 <img width="623" alt="week3_loggedin0" src="https://user-images.githubusercontent.com/20133223/224523365-86dbbde2-806d-43cb-8c99-e84322dbf268.png">
+
+My profile results wasn't showing at first. I needed to pass the parameter to one of the functions in the home_activities.py file. It's working now.
+
+
+<img width="954" alt="week3_withadditionalresults0" src="https://user-images.githubusercontent.com/20133223/224579180-d900dfcc-08e8-45b4-83bf-f7960392088a.png">
