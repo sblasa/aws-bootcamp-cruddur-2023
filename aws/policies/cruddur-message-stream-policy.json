@@ -10,8 +10,8 @@
                 "dynamodb:Query"
             ],
             "Resource": [
-                "***REMOVED***:table/cruddur-messages",
-                "***REMOVED***:table/cruddur-messages/index/message-group-sk-index"
+                "<DYNAMODB_ARN>:table/cruddur-messages",
+                "<DYNAMODB_ARN>:table/cruddur-messages/index/message-group-sk-index"
             ]
         }
     ]
