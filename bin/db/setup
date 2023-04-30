@@ -11,8 +11,8 @@ ABS_PATH=$(readlink -f "$0")
 bin_path=$(dirname $ABS_PATH)
 
 
-source "$bin_path/db/drop"
-source "$bin_path/db/create"
-source "$bin_path/db/schema-load"
-source "$bin_path/db/seed"
-python3 "$bin_path/db/update_cognito_user_ids"
+source "$bin_path/drop"
+source "$bin_path/create"
+source "$bin_path/schema-load"
+source "$bin_path/seed"
+python3 "$bin_path/update_cognito_user_ids"
