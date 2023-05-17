@@ -14,3 +14,4 @@ Here's the messages that were sent between two users.
 
 I was able to updated my nameservers within my domain registration at Porkbun. I watched Andrew's video, and another video someone had posted on how to update nameservers for domain registration. 
 
+Adding the new reference to access token had some issues because I missed some react compoents and I hadn't specified the method in MessageForm.js
