@@ -22,7 +22,7 @@ export class ThumbingServerlessCdkStack extends cdk.Stack {
     const webhookUrl: string = process.env.THUMBING_WEBHOOK_URL as string;
     const topicName: string = process.env.THUMBING_TOPIC_NAME as string;
     const functionPath: string = process.env.THUMBING_FUNCTION_PATH as string;
-    console.log('uploadsBucketName',)
+    console.log('uploadsBucketName',uploadsBucketName)
     console.log('assetsBucketName',assetsBucketName)
     console.log('folderInput',folderInput)
     console.log('folderOutput',folderOutput)
@@ -43,21 +43,21 @@ export class ThumbingServerlessCdkStack extends cdk.Stack {
     );
 
     // create topic and subscription
-    const snsTopic = this.createSnsTopic(topicName)
-    this.createSnsSubscription(snsTopic,webhookUrl)
+    //const snsTopic = this.createSnsTopic(topicName)
+    //this.createSnsSubscription(snsTopic,webhookUrl)
 
     // add our s3 event notifications
     this.createS3NotifyToLambda(folderInput,lambda,uploadsBucket)
-    this.createS3NotifyToSns(folderOutput,snsTopic,assetsBucket)
+    //this.createS3NotifyToSns(folderOutput,snsTopic,assetsBucket)
 
     // create policies
-    const s3UploadsReadWritePolicy = this.createPolicyBucketAccess(uploadsBucket.bucketArn)
-    const s3AssetsReadWritePolicy = this.createPolicyBucketAccess(assetsBucket.bucketArn)
+    //const s3UploadsReadWritePolicy = this.createPolicyBucketAccess(uploadsBucket.bucketArn)
+    //const s3AssetsReadWritePolicy = this.createPolicyBucketAccess(assetsBucket.bucketArn)
     //const snsPublishPolicy = this.createPolicySnSPublish(snsTopic.topicArn)
 
     // attach policies for permissions
-    lambda.addToRolePolicy(s3UploadsReadWritePolicy);
-    lambda.addToRolePolicy(s3AssetsReadWritePolicy);
+    //lambda.addToRolePolicy(s3UploadsReadWritePolicy);
+    //lambda.addToRolePolicy(s3AssetsReadWritePolicy);
     //lambda.addToRolePolicy(snsPublishPolicy);
   }
 
