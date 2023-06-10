@@ -27,7 +27,7 @@
                     "arn": "arn:aws:s3:::example-bucket"
                 },
                 "object": {
-                    "key": "example-object.txt",
+                    "key": "avatars/original/data.jpg",
                     "size": 1024,
                     "eTag": "EXAMPLEETAG",
                     "sequencer": "EXAMPLESEQUENCER"
