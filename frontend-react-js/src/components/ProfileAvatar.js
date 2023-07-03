@@ -1,6 +1,7 @@
 import './ProfileAvatar.css';
 
 export default function ProfileAvatar(props) {
+
   const backgroundImage = `url("https://assets.mocharoll.cloud/avatars/${props.id}.jpg")`;
   const styles = {
     backgroundImage: backgroundImage,
