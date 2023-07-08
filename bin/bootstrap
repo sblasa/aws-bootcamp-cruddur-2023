@@ -12,3 +12,4 @@ BIN_DIR=$(dirname $ABS_PATH)
 bash "$BIN_DIR/db/setup"
 python3 "$BIN_DIR/ddb/schema-load"
 python3 "$BIN_DIR/ddb/seed"
+python3 "$BIN_DIR/db/migrate"
