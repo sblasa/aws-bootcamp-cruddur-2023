@@ -1,5 +1,5 @@
 from flask import Flask
-from flask import request
+from flask import request, g
 from flask_cors import CORS, cross_origin
 import os
 import sys
@@ -17,6 +17,7 @@ from services.create_message import *
 from services.show_activity import *
 from services.update_profile import *
 
+from lib.rollbar import init_rollbar
 from lib.cognito_jwt_token import CognitoJwtToken, extract_access_token, TokenVerifyError
 
 # HoneyComb ---------
@@ -106,22 +107,8 @@ cors = CORS(
 #    return response
 
 # Rollbar ----------
-rollbar_access_token = os.getenv('ROLLBAR_ACCESS_TOKEN')
 with app.app_context():
-  def init_rollbar():
-      """init rollbar module"""
-      rollbar.init(
-          # access token
-          rollbar_access_token,
-          # environment name
-          'production',
-          # server root directory, makes tracebacks prettier
-          root=os.path.dirname(os.path.realpath(__file__)),
-          # flask already sets up logging
-          allow_logging_basic_config=False)
-
-      # send exceptions from `app` to rollbar, using flask's signal system.
-      got_request_exception.connect(rollbar.contrib.flask.report_exception, app)
+  g.rollbar = init_rollbar(app)
 
 @app.route('/api/health-check')
 def health_check():
@@ -129,7 +116,7 @@ def health_check():
 
 @app.route('/rollbar/test')
 def rollbar_test():
-    rollbar.report_message('Hello World!', 'warning')
+    g.rollbar.report_message('Hello World!', 'warning')
     return "Hello World!"
 
 @app.route("/api/message_groups", methods=['GET'])
@@ -313,6 +300,7 @@ def data_update_profile():
     # unauthenicatied request
     app.logger.debug(e)
     return {}, 401
+
 
 if __name__ == "__main__":
   app.run(debug=True)
