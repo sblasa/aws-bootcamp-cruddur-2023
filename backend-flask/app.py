@@ -1,5 +1,5 @@
 from flask import Flask
-from flask import request, g
+from flask import request, sessions
 from flask_cors import CORS, cross_origin
 import os
 import sys
@@ -108,7 +108,7 @@ cors = CORS(
 
 # Rollbar ----------
 with app.app_context():
-  g.rollbar = init_rollbar(app)
+  sessions.rollbar = init_rollbar(app)
 
 @app.route('/api/health-check')
 def health_check():
@@ -116,7 +116,7 @@ def health_check():
 
 @app.route('/rollbar/test')
 def rollbar_test():
-    g.rollbar.report_message('Hello World!', 'warning')
+    sessions.rollbar.report_message('Hello World!', 'warning')
     return "Hello World!"
 
 @app.route("/api/message_groups", methods=['GET'])
