@@ -22,7 +22,7 @@ Parameters:
     Default: us-west-2b
   Az3:
     Type: AWS::EC2::AvailabilityZone::Name
-    Default: us-west-2d
+    Default: us-west-2c
 Resources:
   VPC:
     # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpc.html
