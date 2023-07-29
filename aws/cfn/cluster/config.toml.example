@@ -2,6 +2,3 @@
 bucket = ''
 region = ''
 stack_name = ''
-
-[parameters]
-CertificateArn = ''
