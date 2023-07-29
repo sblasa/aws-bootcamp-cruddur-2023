@@ -204,7 +204,7 @@ Resources:
           Value: 0
       VpcId:
         Fn::ImportValue:
-!Sub ${NetworkingStack}VpcId
+          !Sub ${NetworkingStack}VpcId
   FrontendTG:
     # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
