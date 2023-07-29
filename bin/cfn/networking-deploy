@@ -3,7 +3,6 @@ set -e # stop the execution of the script if it fails
 
 CFN_PATH="/workspace/aws-bootcamp-cruddur-2023/aws/cfn/networking/template.yaml"
 echo $CFN_PATH
-echo $CFN_BUCKET 
 
 cfn-lint $CFN_PATH
 
