@@ -93,7 +93,7 @@ Resources:
     Properties:
       Cluster:
         Fn::ImportValue:
-          !Sub "${ClusterStack}"
+          !Sub "${ClusterStack}ClusterName"
       DeploymentController:
         Type: ECS
       DesiredCount: 1

@@ -1,216 +1,245 @@
 AWSTemplateFormatVersion: 2010-09-09
+
 Description: |
-  The base networking components for our stack:
-  - VPC
-    - sets DNS hostnames for EC2 instances
-    - Only IPV4, IPV6 is disabled
-  - InternetGateway
-  - Route Table
-    - route to the IGW
-    - route to Local
-  - 6 Subnets Explicity Associated to Route Table
-    - 3 Public Subnets numbered 1 to 3
-    - 3 Private Subnets numbered 1 to 3
+  The networking and cluster configuration to support fargate containers
+  - ECS Fargate Cluster
+  - Application Load Balanacer (ALB)
+    - ipv4 only
+    - internet facing
+    - certificate attached from Amazon Certification Manager (ACM)
+  - ALB Security Group
+  - HTTPS Listerner
+    - send naked domain to frontend Target Group
+    - send api. subdomain to backend Target Group
+  - HTTP Listerner
+    - redirects to HTTPS Listerner
+  - Backend Target Group
+  - Frontend Target Group
 
 Parameters:
-  VpcCidrBlock:
+  NetworkingStack:
     Type: String
-    Default: 10.0.0.0/16
-  Az1:
-    Type: AWS::EC2::AvailabilityZone::Name
-    Default: us-west-2a
-  SubnetCidrBlocks: 
-    Description: "Comma-delimited list of CIDR blocks for our private public subnets"
-    Type: CommaDelimitedList
-    Default: >
-      10.0.0.0/24, 
-      10.0.4.0/24, 
-      10.0.8.0/24, 
-      10.0.12.0/24,
-      10.0.16.0/24,
-      10.0.20.0/24
-  Az2:
-    Type: AWS::EC2::AvailabilityZone::Name
-    Default: us-west-2b
-  Az3:
-    Type: AWS::EC2::AvailabilityZone::Name
-    Default: us-west-2c
+    Description: This is our base layer of networking components eg. VPC, Subnets
+    Default: CrdNet
+  CertificateArn:
+    Type: String
+  #Frontend ------
+  FrontendPort:
+    Type: Number
+    Default: 3000
+  FrontendHealthCheckIntervalSeconds:
+    Type: Number
+    Default: 15
+  FrontendHealthCheckPath:
+    Type: String
+    Default: "/"
+  FrontendHealthCheckPort:
+    Type: String
+    Default: 80
+  FrontendHealthCheckProtocol:
+    Type: String
+    Default: HTTP
+  FrontendHealthCheckTimeoutSeconds:
+    Type: Number
+    Default: 5
+  FrontendHealthyThresholdCount:
+    Type: Number
+    Default: 2
+  FrontendUnhealthyThresholdCount:
+    Type: Number
+    Default: 2
+  #Backend ------
+  BackendPort:
+    Type: Number
+    Default: 4567
+  BackendHealthCheckIntervalSeconds:
+    Type: String
+    Default: 15
+  BackendHealthCheckPath:
+    Type: String
+    Default: "/api/health-check"
+  BackendHealthCheckPort:
+    Type: String
+    Default: 80
+  BackendHealthCheckProtocol:
+    Type: String
+    Default: HTTP
+  BackendHealthCheckTimeoutSeconds:
+    Type: Number
+    Default: 5
+  BackendHealthyThresholdCount:
+    Type: Number
+    Default: 2
+  BackendUnhealthyThresholdCount:
+    Type: Number
+    Default: 2
 Resources:
-  VPC:
-    # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpc.html
-    Type: AWS::EC2::VPC
+  FargateCluster:
+    # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-cluster.html
+    Type: AWS::ECS::Cluster
     Properties:
-      CidrBlock: !Ref VpcCidrBlock
-      EnableDnsHostnames: true
-      EnableDnsSupport: true
-      InstanceTenancy: default
-      Tags:
-        - Key: Name
-          Value: !Sub "${AWS::StackName}VPC"
-  IGW:
-    # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-internetgateway.html
-    Type: AWS::EC2::InternetGateway
+      ClusterName: !Sub "${AWS::StackName}FargateCluster"
+      CapacityProviders:
+        - FARGATE
+      ClusterSettings:
+        - Name: containerInsights
+          Value: enabled
+      Configuration:
+        ExecuteCommandConfiguration:
+          # KmsKeyId: !Ref KmsKeyId
+          Logging: DEFAULT
+      ServiceConnectDefaults:
+        Namespace: cruddur
+  ALB:
+    # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-loadbalancer.html
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties: 
+      Name: !Sub "${AWS::StackName}ALB"
+      Type: application
+      IpAddressType: ipv4
+      # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-elasticloadbalancingv2-loadbalancer-loadbalancerattributes.html
+      Scheme: internet-facing
+      SecurityGroups:
+        - !GetAtt ALBSG.GroupId
+      Subnets:
+        Fn::Split:
+          - ","
+          - Fn::ImportValue:
+              !Sub "${NetworkingStack}PublicSubnetIds"
+      LoadBalancerAttributes:
+        - Key: routing.http2.enabled
+          Value: true
+        - Key: routing.http.preserve_host_header.enabled
+          Value: false
+        - Key: deletion_protection.enabled
+          Value: true
+        - Key: load_balancing.cross_zone.enabled
+          Value: true
+        - Key: access_logs.s3.enabled
+          Value: false
+        # In-case we want to turn on logs
+        # - Name: access_logs.s3.bucket
+        #   Value: bucket-name
+        # - Name: access_logs.s3.prefix
+        #   Value: ""
+  HTTPSListener:
+    # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-listener.html
+    Type: AWS::ElasticLoadBalancingV2::Listener
     Properties:
-      Tags:
-        - Key: Name
-          Value: !Sub "${AWS::StackName}IGW"
-  AttachIGW:
-    Type: AWS::EC2::VPCGatewayAttachment
+      Protocol: HTTPS
+      Port: 443
+      LoadBalancerArn: !Ref ALB
+      Certificates: 
+        - CertificateArn: !Ref CertificateArn
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn:  !Ref FrontendTG
+  HTTPListener:
+    # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-listener.html
+    Type: AWS::ElasticLoadBalancingV2::Listener
     Properties:
-      VpcId: !Ref VPC
-      InternetGatewayId: !Ref IGW
-  RouteTable:
-    # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-routetable.html
-    Type: AWS::EC2::RouteTable
+        Protocol: HTTP
+        Port: 80
+        LoadBalancerArn: !Ref ALB
+        DefaultActions:
+          - Type: redirect
+            RedirectConfig:
+              Protocol: "HTTPS"
+              Port: 443
+              Host: "#{host}"
+              Path: "/#{path}"
+              Query: "#{query}"
+              StatusCode: "HTTP_301"
+  ApiALBListernerRule:
+    # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-listenerrule.html
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
     Properties:
-      VpcId:  !Ref VPC
-      Tags:
-        - Key: Name
-          Value: !Sub "${AWS::StackName}RT"
-  RouteToIGW:
-    # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-route.html
-    Type: AWS::EC2::Route
-    DependsOn: AttachIGW
+      Conditions: 
+        - Field: host-header
+          HostHeaderConfig: 
+            Values: 
+              - api.cruddur.com
+      Actions: 
+        - Type: forward
+          TargetGroupArn:  !Ref BackendTG
+      ListenerArn: !Ref HTTPSListener
+      Priority: 1
+  ALBSG:
+    # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-security-group.html
+    Type: AWS::EC2::SecurityGroup
     Properties:
-      RouteTableId: !Ref RouteTable
-      GatewayId: !Ref IGW
-      DestinationCidrBlock: 0.0.0.0/0
-  SubnetPub1:
-    # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-subnet.html
-    Type: AWS::EC2::Subnet
+      GroupName: !Sub "${AWS::StackName}AlbSG"
+      GroupDescription: Public Facing SG for our Cruddur ALB
+      VpcId:
+        Fn::ImportValue:
+          !Sub ${NetworkingStack}VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: '0.0.0.0/0'
+          Description: INTERNET HTTPS
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: '0.0.0.0/0'
+          Description: INTERNET HTTP
+  BackendTG:
+    # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
-      AvailabilityZone: !Ref Az1
-      CidrBlock: !Select [0, !Ref SubnetCidrBlocks]
-      EnableDns64: false
-      MapPublicIpOnLaunch: true #public subnet
-      VpcId: !Ref VPC
-      Tags:
-        - Key: Name
-          Value: !Sub "${AWS::StackName}SubnetPub1"
-  SubnetPub2:
-    # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-subnet.html
-    Type: AWS::EC2::Subnet
+      Name: !Sub "${AWS::StackName}BackendTG"
+      Port: !Ref BackendPort
+      HealthCheckEnabled: true
+      HealthCheckProtocol: !Ref BackendHealthCheckProtocol
+      HealthCheckIntervalSeconds: !Ref BackendHealthCheckIntervalSeconds
+      HealthCheckPath: !Ref BackendHealthCheckPath
+      HealthCheckPort: !Ref BackendHealthCheckPort
+      HealthCheckTimeoutSeconds: !Ref BackendHealthCheckTimeoutSeconds
+      HealthyThresholdCount: !Ref BackendHealthyThresholdCount
+      UnhealthyThresholdCount: !Ref BackendUnhealthyThresholdCount
+      IpAddressType: ipv4
+      Matcher: 
+        HttpCode: 200
+      Protocol: HTTP
+      ProtocolVersion: HTTP2
+      TargetGroupAttributes: 
+        - Key: deregistration_delay.timeout_seconds
+          Value: 0
+      VpcId:
+        Fn::ImportValue:
+          !Sub ${NetworkingStack}VpcId
+  FrontendTG:
+    # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
-      AvailabilityZone: !Ref Az2
-      CidrBlock: !Select [1, !Ref SubnetCidrBlocks]
-      EnableDns64: false
-      MapPublicIpOnLaunch: true #public subnet
-      VpcId: !Ref VPC
-      Tags:
-        - Key: Name
-          Value: !Sub "${AWS::StackName}SubnetPub2"
-  SubnetPub3:
-    # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-subnet.html
-    Type: AWS::EC2::Subnet
-    Properties:
-      AvailabilityZone: !Ref Az3
-      CidrBlock: !Select [2, !Ref SubnetCidrBlocks]
-      EnableDns64: false
-      MapPublicIpOnLaunch: true #public subnet
-      VpcId: !Ref VPC
-      Tags:
-        - Key: Name
-          Value: !Sub "${AWS::StackName}SubnetPub3"
-  SubnetPriv1:
-    # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-subnet.html
-    Type: AWS::EC2::Subnet
-    Properties:
-      AvailabilityZone: !Ref Az1
-      CidrBlock: !Select [3, !Ref SubnetCidrBlocks]
-      EnableDns64: false
-      MapPublicIpOnLaunch: false #public subnet
-      VpcId: !Ref VPC
-      Tags:
-        - Key: Name
-          Value: !Sub "${AWS::StackName}SubnetPriv1"
-  SubnetPriv2:
-    # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-subnet.html
-    Type: AWS::EC2::Subnet
-    Properties:
-      AvailabilityZone: !Ref Az2
-      CidrBlock: !Select [4, !Ref SubnetCidrBlocks]
-      EnableDns64: false
-      MapPublicIpOnLaunch: false #public subnet
-      VpcId: !Ref VPC
-      Tags:
-        - Key: Name
-          Value: !Sub "${AWS::StackName}SubnetPriv2"
-  SubnetPriv3:
-    # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-subnet.html
-    Type: AWS::EC2::Subnet
-    Properties:
-      AvailabilityZone: !Ref Az3
-      CidrBlock: !Select [5, !Ref SubnetCidrBlocks]
-      EnableDns64: false
-      MapPublicIpOnLaunch: false #public subnet
-      VpcId: !Ref VPC
-      Tags:
-        - Key: Name
-          Value: !Sub "${AWS::StackName}SubnetPriv3"
-  SubnetPub1RTAssociation:
-    Type: AWS::EC2::SubnetRouteTableAssociation
-    Properties:
-      SubnetId: !Ref SubnetPub1
-      RouteTableId: !Ref RouteTable
-  SubnetPub2RTAssociation:
-    Type: AWS::EC2::SubnetRouteTableAssociation
-    Properties:
-      SubnetId: !Ref SubnetPub2
-      RouteTableId: !Ref RouteTable
-  SubnetPub3RTAssociation:
-    Type: AWS::EC2::SubnetRouteTableAssociation
-    Properties:
-      SubnetId: !Ref SubnetPub3
-      RouteTableId: !Ref RouteTable
-  SubnetPriv1RTAssociation:
-    Type: AWS::EC2::SubnetRouteTableAssociation
-    Properties:
-      SubnetId: !Ref SubnetPriv1
-      RouteTableId: !Ref RouteTable
-  SubnetPriv2RTAssociation:
-    Type: AWS::EC2::SubnetRouteTableAssociation
-    Properties:
-      SubnetId: !Ref SubnetPriv2
-      RouteTableId: !Ref RouteTable
-  SubnetPriv3RTAssociation:
-    Type: AWS::EC2::SubnetRouteTableAssociation
-    Properties:
-      SubnetId: !Ref SubnetPriv3
-      RouteTableId: !Ref RouteTable
+      Name: !Sub "${AWS::StackName}FrontendTG"
+      Port: !Ref FrontendPort
+      HealthCheckEnabled: true
+      HealthCheckProtocol: !Ref FrontendHealthCheckProtocol
+      HealthCheckIntervalSeconds: !Ref FrontendHealthCheckIntervalSeconds
+      HealthCheckPath: !Ref FrontendHealthCheckPath
+      HealthCheckPort: !Ref FrontendHealthCheckPort
+      HealthCheckTimeoutSeconds: !Ref FrontendHealthCheckTimeoutSeconds
+      HealthyThresholdCount: !Ref FrontendHealthyThresholdCount
+      UnhealthyThresholdCount: !Ref FrontendUnhealthyThresholdCount
+      IpAddressType: ipv4
+      Matcher: 
+        HttpCode: 200
+      Protocol: HTTP
+      ProtocolVersion: HTTP2
+      TargetGroupAttributes: 
+        - Key: deregistration_delay.timeout_seconds
+          Value: 0
+      VpcId:
+        Fn::ImportValue:
+          !Sub ${NetworkingStack}VpcId
 Outputs:
-  VpcId:
-    Value: !Ref VPC
+  ClusterName:
+    Value: !Ref FargateCluster
     Export:
-      Name: !Sub "${AWS::StackName}VpcId"
-  VpcCidrBlock:
-    Value: !GetAtt VPC.CidrBlock
+      Name: !Sub "${AWS::StackName}ClusterName"
+  ALBSecurityGroupId:
+    Value: !GetAtt ALBSG.GroupId
     Export:
-      Name: !Sub "${AWS::StackName}VpcCidrBlock"
-  SubnetCidrBlocks:
-    Value: !Join [",", !Ref SubnetCidrBlocks]
-    Export:
-      Name: !Sub "${AWS::StackName}SubnetCidrBlocks"
-  PublicSubnetIds:
-    Value: !Join 
-      - ","
-      - - !Ref SubnetPub1
-        - !Ref SubnetPub2
-        - !Ref SubnetPub3
-    Export:
-      Name: !Sub "${AWS::StackName}PublicSubnetIds"
-  PrivateSubnetIds:
-    Value: !Join 
-      - ","
-      - - !Ref SubnetPriv1
-        - !Ref SubnetPriv2
-        - !Ref SubnetPriv3
-    Export:
-      Name: !Sub "${AWS::StackName}PrivateSubnetIds"
-  AvailabilityZones:
-    Value: !Join 
-      - ","
-      - - !Ref Az1
-        - !Ref Az2
-        - !Ref Az3
-    Export:
-      Name: !Sub "${AWS::StackName}AvailabilityZones"
+      Name: !Sub "${AWS::StackName}ALBSecurityGroupId"
