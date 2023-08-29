@@ -4,6 +4,6 @@ region = 'us-west-2'
 stack_name = 'CrdFrontend'
 
 [parameters]
-CertificateArn = 'arn:aws:acm:us-east-1:542558699829:certificate/28c8e6cf-c0fb-4143-9068-44aea5510276'
+CertificateArn = 'arn:aws:acm:us-east-1:542558699829:certificate/96ab6eaf-456b-44f3-af04-15e3af901e89'
 WwwBucketName = 'www.mocharoll.cloud'
 RootBucketName = 'mocharoll.cloud'
