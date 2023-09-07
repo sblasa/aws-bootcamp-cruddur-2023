@@ -1,0 +1,9 @@
+[deploy]
+bucket = 'cfn-artifacts-mocharoll'
+region = 'us-west-2'
+stack_name = 'CrdSyncRole'
+
+[parameters]
+GitHubOrg = 'sblasa'
+RepositoryName = 'aws-bootcamp-cruddur-2023'
+OIDCProviderArn = ''
