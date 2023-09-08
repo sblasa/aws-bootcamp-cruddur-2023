@@ -30,3 +30,54 @@ Made a change in DesktopSidbar.js to see changes in sync and re-ran
 Create Gem file and Rakefile in directory
 
 Paste account number from aws account
+
+Create folder sync: aws/cfn/sync
+Add config.toml 
+Add template.yaml
+Populate template.yaml and config.toml with details for Cloudformation.
+
+Create sync bash script in /bin/cfn/
+Populate appropriate details--use from db config--point templates to aws/cfn/sync files--config.toml and template.yaml paths
+
+Tags will be group=cruddur-sync
+chmod the bin/cfn/sync script
+run script bin/cfn/sync
+
+Add bundle update --bundler in gitpod.yml file line 11.
+Go to AWS console in Cloudformation
+
+Execute Changes in Cloudformation for sync
+Find role in IAM CrdSyncRole-Role-1HXZ0QQGAVX05 and attach policy to allow S3 bucket access.
+
+Create policy and attach to role.
+Policy name: S3AccessForSync
+
+{
+	"Version": "2012-10-17",
+	"Statement": [
+		{
+			"Sid": "VisualEditor0",
+			"Effect": "Allow",
+			"Action": [
+				"s3:PutObject",
+				"s3:GetObject",
+				"s3:ListBucket",
+				"s3:DeleteObject"
+			],
+			"Resource": [
+				"arn:aws:s3:::mocharoll.cloud",
+				"arn:aws:s3:::*/*"
+			]
+		}
+	]
+}
+
+Make sure ClusterService is deployed.
+run ./bin/cfn/service-deploy script
+
+build a new image and push
+go to /bin/backend/build script
+deploy script
+
+deploy script ./bin/backend/push
+
