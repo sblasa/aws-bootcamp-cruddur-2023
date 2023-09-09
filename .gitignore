@@ -1,6 +1,5 @@
-docker/dynamodb/shared-local-instance.db
-frontend-react-js/build
-*.deb
+docker/**/*
+frontend-react-js/build/*
 *.env
 node_modules
 .aws-sam
