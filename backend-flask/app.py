@@ -108,8 +108,21 @@ cors = CORS(
 
 # Rollbar ----------
 with app.app_context():
-  sessions.rollbar = init_rollbar(app)
+  def init_rollbar():
+      """init rollbar module"""
+      rollbar.init(
+          # access token
+          rollbar_access_token,
+          # environment name
+          'production',
+          # server root directory, makes tracebacks prettier
+          root=os.path.dirname(os.path.realpath(__file__)),
+          # flask already sets up logging
+          allow_logging_basic_config=False)
 
+      # send exceptions from `app` to rollbar, using flask's signal system.
+      got_request_exception.connect(rollbar.contrib.flask.report_exception, app)
+      
 @app.route('/api/health-check')
 def health_check():
   return {'success': True, 'ver': 1}, 200
