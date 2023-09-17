@@ -104,3 +104,20 @@ Go back to CloudFormation and execute change sets
 
 Updated backend-flask/app.py file with correct rollbar flask code
 Updated docker-compose.yml file with backend-flask config
+
+Deployed Service again ./bin/cfn/service-deploy
+Execute changes
+Run script ./bin/backend/build
+Run script ./bin/backend/push
+
+Find prod connection url
+
+env | grep PROD
+PRODUCTION_CONNECTION_URL=postgresql://awscrudduruser:SP9Wtx3x2t8Zua@cruddur-db-instance.ciwdfidz3n9i.us-west-2.rds.amazonaws.com:5432/cruddur
+
+Change database instance name
+
+export PROD_CONNECTION_URL="postgresql://awscrudduruser:SP9Wtx3x2t8Zua@cruddur-instance.ciwdfidz3n9i.us-west-2.rds.amazonaws.com:5432/cruddur"
+
+gp env PROD_CONNECTION_URL="postgresql://awscrudduruser:SP9Wtx3x2t8Zua@cruddur-
+instance.ciwdfidz3n9i.us-west-2.rds.amazonaws.com:5432/cruddur"
