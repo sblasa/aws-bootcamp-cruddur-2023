@@ -4,5 +4,5 @@ region = 'us-west-2'
 stack_name = 'CrdSrvBackendFlask'
 
 [parameters]
-EnvFrontendUrl = 'mocharoll.cloud'
-EnvBackendUrl = 'api.mocharoll.cloud'
+EnvFrontendUrl = 'https://mocharoll.cloud'
+EnvBackendUrl = 'https://api.mocharoll.cloud'
