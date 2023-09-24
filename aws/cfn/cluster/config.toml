@@ -1,0 +1,8 @@
+[deploy]
+bucket = 'cfn-artifacts-mocharoll'
+region = 'us-west-2'
+stack_name = 'CrdCluster'
+
+[parameters]
+CertificateArn = 'arn:aws:acm:us-west-2:542558699829:certificate/641db304-4fd4-41f8-baf4-a68ebb70949f'
+NetworkingStack = 'CrdNet'

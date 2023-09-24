@@ -1,0 +1,9 @@
+[deploy]
+bucket = 'cfn-artifacts-mocharoll'
+region = 'us-west-2'
+stack_name = 'CrdFrontend'
+
+[parameters]
+CertificateArn = 'arn:aws:acm:us-east-1:542558699829:certificate/96ab6eaf-456b-44f3-af04-15e3af901e89'
+WwwBucketName = 'www.mocharoll.cloud'
+RootBucketName = 'mocharoll.cloud'
