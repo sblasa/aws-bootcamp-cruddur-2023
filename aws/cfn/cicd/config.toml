@@ -8,4 +8,5 @@ ServiceStack = 'CrdSrvBackendFlask'
 ClusterStack = 'CrdCluster'
 GitHubBranch = 'prod'
 GithubRepo = 'sblasa/aws-bootcamp-cruddur-2023'
+BuildSpec = 'backend-flask/buildspec.yml'
 ArtifactBucketName = "codepipeline-mocharoll-artifacts"
