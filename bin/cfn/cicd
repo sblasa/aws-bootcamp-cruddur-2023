@@ -13,6 +13,8 @@ BUCKET=$(cfn-toml key deploy.bucket -t $CONFIG_PATH)
 REGION=$(cfn-toml key deploy.region -t $CONFIG_PATH)
 STACK_NAME=$(cfn-toml key deploy.stack_name -t $CONFIG_PATH)
 
+mkdir -p "/workspace/aws-bootcamp-cruddur-2023/tmp"
+
 # package
 # -----------------
 echo "== packaging CFN to S3..."
