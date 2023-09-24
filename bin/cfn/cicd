@@ -35,3 +35,5 @@ aws cloudformation deploy \
   --tags group=cruddur-cicd \
   --parameter-overrides $PARAMETERS \
   --capabilities CAPABILITY_NAMED_IAM
+
+echo -e "For fresh deployments:\nRemember to go to the AWS Console to approve the new pipeline connection under CodeBuild Settings" 
