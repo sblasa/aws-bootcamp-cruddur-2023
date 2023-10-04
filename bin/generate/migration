@@ -37,7 +37,7 @@ class {klass}Migration:
     db.query_commit({klass}Migration.rollback_sql(),{{
     }})
 
-migration = AddBioColumnMigration
+migration = {klass}Migration
 """
 #remove leading and trailing new lines
 file_content = file_content.lstrip('\n').rstrip('\n')
@@ -48,4 +48,3 @@ print(file_path)
 
 with open(file_path, 'w') as f:
   f.write(file_content)
-  
