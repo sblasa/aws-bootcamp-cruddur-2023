@@ -6,6 +6,8 @@ VALUES
   ('Londo Mollari','lmollari@centari.com' ,'londo' ,'MOCK'),
   ('Sussette','msblasa@gmail.com' ,'sblasa' ,'MOCK'),
   ('Mama', 'hello@me.com', 'itsmamahello', 'MOCK');
+    ('subtestuers', 'stblasa@gmail.com', 'testmeagain', 'MOCK');
+  
 
 INSERT INTO public.activities (user_uuid, message, expires_at)
 VALUES
