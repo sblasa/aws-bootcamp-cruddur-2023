@@ -3,6 +3,26 @@
 - Application: Cruddur
 - Cohort: 2023-A1
 
+
+Set env variables in docker-compose.yaml:
+update CONNECTION_URL in the backend-flask scope to use your local postgres container url
+Run docker-compose.yaml from the project root
+Run the Postgres database setup script to create the database, tables, seed users and activities, and update seeded users' UUIDs from Cognito
+Run the DynamoDB schema-load and seed scripts to created seed conversations between the seeded users
+Production Environment
+The production environment uses RDS (Postgres) for users and their activities.
+
+If user and activities tables DO NOT EXIST in the RDS, run the Postgres database schema-load script with prod as the first argument to initialize the tables in the RDS
+If the backend-flask and frontend-react-js services are NOT deployed to ECS, create the services from the json files.
+aws ecs create-service --cli-input-json file://aws/json/service-backend-flask.json
+aws ecs create-service --cli-input-json file://aws/json/service-frontend-react-js.json
+If the service's task definitions DO NOT EXIST, you must create them
+
+aws ecs register-task-definition --cli-input-json file://aws/task-definitions/backend-flask.json
+aws ecs register-task-definition --cli-input-json file://aws/task-definitions/frontend-react-js.json
+Troubleshooting
+
+
 This is the starting codebase that will be used in the FREE AWS Cloud Project Bootcamp 2023
 
 ![Cruddur Graphic](_docs/assets/cruddur-banner.jpg)
