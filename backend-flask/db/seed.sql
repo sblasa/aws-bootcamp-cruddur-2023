@@ -5,7 +5,6 @@ VALUES
   ('itsmamahello', 'msblasa@gmail.com', 'itsmamahello', 'MOCK'),
   ('Londo Mollari','lmollari@centari.com' ,'londo' ,'MOCK'),
   ('Sussette','msblasa@gmail.com' ,'sblasa' ,'MOCK'),
-  ('Mama', 'hello@me.com', 'itsmamahello', 'MOCK'),
   ('subtestuers', 'stblasa@gmail.com', 'testmeagain', 'MOCK');
   
 
