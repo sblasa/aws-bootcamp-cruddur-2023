@@ -205,6 +205,8 @@ In CICD Pipeline template, make sure you give the correct permissions.
 
 Make the changes.
 
+
+11/25/23
 To fix the reply_to_activity_uuid integer datatype to text in Postrgres Activities table:
 
 Run migration
