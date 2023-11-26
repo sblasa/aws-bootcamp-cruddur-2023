@@ -196,3 +196,42 @@ Make sure you select the public subnets only (3 of them)
 Save
 
 Need to remember to look at log messages when it says NOT NULL something is not being captured in the database. Look for the code for the insertions to determine what is missing.
+
+Everytime you create a new CodePipeline
+Need to go to CodeBuild - Settings
+Approve Connection
+
+In CICD Pipeline template, make sure you give the correct permissions.
+
+Make the changes.
+
+To fix the reply_to_activity_uuid integer datatype to text in Postrgres Activities table:
+
+Run migration
+./bin/generate/migration reply_to_activity_uuid_to_string
+
+add Alter Table and Alter Column SQL statements
+
+    ALTER TABLE activities
+    ALTER COLUMN reply_to_activity_uuid TYPE text USING reply_to_activity_uuid::text;
+
+
+And Rollback Statement in migration file
+
+    ALTER TABLE activities
+    ALTER COLUMN reply_to_activity_uuid TYPE integer USING (reply_to_activity_uuid::integer);
+
+If generated migration file has hardcoded value
+AddBioColumnMigration
+where code says:
+
+migration = AddBioColumnMigrationthen
+
+remove Hardcoded value in bin/db/generate/migration file
+and set
+migration = {klass}Migration
+instead of hardcoded value
+
+Once the fix migration script has been updated
+then run
+./bin/db/migrate
