@@ -1,13 +1,15 @@
 import './ReplyForm.css';
 import React from "react";
 import process from 'process';
-import {getAccessToken} from '../lib/CheckAuth';
+import {getAccessToken} from 'lib/CheckAuth';
 
-import ActivityContent  from '../components/ActivityContent';
+import ActivityContent  from 'components/ActivityContent';
+import FormErrors from 'components/FormErrors';
 
 export default function ReplyForm(props) {
   const [count, setCount] = React.useState(0);
   const [message, setMessage] = React.useState('');
+  const [errors, setErrors] = React.useState([]);
 
   const classes = []
   classes.push('count')
@@ -16,7 +18,6 @@ export default function ReplyForm(props) {
   }
 
   const onsubmit = async (event) => {
-    console.log('replyActivity',props.activity)
     event.preventDefault();
     try {
       const backend_url = `${process.env.REACT_APP_BACKEND_URL}/api/activities/${props.activity.uuid}/reply`
@@ -42,7 +43,6 @@ export default function ReplyForm(props) {
         let found_activity = activities_deep_copy.find(function (element) {
           return element.uuid ===  props.activity.uuid;
         });
-        console.log('found_activity',found_activity)
         found_activity.replies.push(data)
 
         props.setActivities(activities_deep_copy);
@@ -54,6 +54,7 @@ export default function ReplyForm(props) {
         console.log(res)
       }
     } catch (err) {
+      setErrors(['generic_500']);
       console.log(err);
     }
   }
@@ -97,6 +98,7 @@ export default function ReplyForm(props) {
                 <div className={classes.join(' ')}>{240-count}</div>
                 <button type='submit'>Reply</button>
               </div>
+              <FormErrors errors={errors}/>
             </form>
           </div>
         </div>
