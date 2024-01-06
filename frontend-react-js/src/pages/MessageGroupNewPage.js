@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import DesktopNavigation  from 'components/DesktopNavigation';
 import MessageGroupFeed from 'components/MessageGroupFeed';
 import MessagesFeed from 'components/MessageFeed';
-import MessagesForm from '.components/MessageForm';
+import MessagesForm from 'components/MessageForm';
 import {checkAuth} from 'lib/CheckAuth';
 import {get} from 'lib/Requests';
 
