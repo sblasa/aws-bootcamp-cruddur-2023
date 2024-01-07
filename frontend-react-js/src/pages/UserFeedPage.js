@@ -44,7 +44,7 @@ export default function UserFeedPage() {
     <article>
       <DesktopNavigation user={user} active={'profile'} setPopped={setPopped} />
       <div className='content'>
-        <ActivityForm popped={popped} setActivities={setActivities} />
+      <ActivityForm popped={popped} setActivities={setActivities} />
         <ProfileForm 
           profile={profile}
           popped={poppedProfile} 
