@@ -1,4 +1,5 @@
 import './ActivityItem.css';
+import { Link } from "react-router-dom";
 
 import ActivityContent  from '../components/ActivityContent';
 import ActivityActionReply  from '../components/ActivityActionReply';
@@ -7,7 +8,6 @@ import ActivityActionLike  from '../components/ActivityActionLike';
 import ActivityActionShare  from '../components/ActivityActionShare';
 
 export default function ActivityItem(props) {
-
   let replies;
   if (props.activity.replies) {
     replies = <div className="replies">
@@ -22,8 +22,9 @@ export default function ActivityItem(props) {
               </div>
   }
 
+
   return (
-    <div className='activity_item'>
+    <Link className='activity_item' to={`/@${props.activity.handle}/status/${props.activity.uuid}`}>
       <div className="acitivty_main">
         <ActivityContent activity={props.activity} />
         <div className="activity_actions">
@@ -34,6 +35,6 @@ export default function ActivityItem(props) {
         </div>
       </div>
       {replies}
-    </div>
+    </Link>
   );
 }
