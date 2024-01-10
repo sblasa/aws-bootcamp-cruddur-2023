@@ -1,5 +1,6 @@
 SELECT
     (SELECT COALESCE(row_to_json(object_row),'{{}}'::json) FROM (
+      SELECT
       activities.uuid,
       users.display_name,
       users.handle,
