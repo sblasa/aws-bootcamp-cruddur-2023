@@ -1,18 +1,18 @@
-import './ActivityShowPage';
-
+import './ActivityShowPage.css';
 import React from "react";
 import { useParams } from 'react-router-dom';
-import DesktopNavigation from 'components/DesktopNavigation';
+
+import DesktopNavigation  from 'components/DesktopNavigation';
 import DesktopSidebar     from 'components/DesktopSidebar';
 import ActivityForm from 'components/ActivityForm';
 import ReplyForm from 'components/ReplyForm';
 import Replies from 'components/Replies';
-import ActivityItem from 'components/ActivityItem';
+import ActivityItem from 'components/ActivityItem'
 
-import {checkAuth} from 'lib/CheckAuth';
 import {get} from 'lib/Requests';
+import {checkAuth} from 'lib/CheckAuth';
 
-export default function ActiviityShowPage() {
+export default function ActivityShowPage() {
   const [activity, setActivity] = React.useState(null);
   const [replies, setReplies] = React.useState([]);
   const [popped, setPopped] = React.useState(false);
@@ -23,15 +23,15 @@ export default function ActiviityShowPage() {
   const params = useParams();
 
   const loadData = async () => {
-    const url = `${process.env.REACT_APP_BACKEND_URL}/api/activities/@${params.handle}/status${params.activity_uuid}`
-    get(url,null,function(data){
-      setActivity(data.activity)
-      setReplies(data.replies)
+    const url = `${process.env.REACT_APP_BACKEND_URL}/api/activities/@${params.handle}/status/${params.activity_uuid}`
+    get(url,{
+      auth: false,
+      success: function(data){
+        setActivity(data.activity)
+        setReplies(data.replies)
+      }
     })
-  
-  };
-
-
+  }
   
   React.useEffect(()=>{
     //prevents double call
@@ -42,17 +42,15 @@ export default function ActiviityShowPage() {
     checkAuth(setUser);
   }, [])
 
-  let el_activity 
-  if(activity !== null){
+  let el_activity
+  if (activity !== null){
     el_activity = (
       <ActivityItem 
-      setReplyActivity={setReplyActivity} 
-      setPopped={setPoppedReply} 
-      key={activity.uuid} 
-      activity={activity} 
-/>
+        setReplyActivity={setReplyActivity}
+        setPopped={setPoppedReply}
+        activity={activity} 
+      />
     )
-
   }
 
   return (
