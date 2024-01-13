@@ -23,17 +23,20 @@ export default function ReplyForm(props) {
     const payload_data = {
       activity_uuid: props.activity.uuid,
       message: message
-    };
-    put(url,payload_data,{
+    }
+    post(url,payload_data,{
       auth: true,
       setErrors: setErrors,
       success: function(data){
-        setBio(null)
-        setDisplayName(null)
+        if (props.setReplies) {
+          props.setReplies(current => [data,...current]);
+        }
+        // reset and close the form
+        setCount(0)
+        setMessage('')
         props.setPopped(false)
       }
-    });
-    
+    })
   }
 
   const textarea_onchange = (event) => {
@@ -57,7 +60,7 @@ export default function ReplyForm(props) {
         <div className="popup_form">
           <div className="popup_heading">
             <div className="popup_title">
-            Reply to...
+              Reply to...
             </div>
           </div>
           <div className="popup_content">
@@ -78,7 +81,7 @@ export default function ReplyForm(props) {
                 <div className={classes.join(' ')}>{240-count}</div>
                 <button type='submit'>Reply</button>
               </div>
-              <FormErrors errors={errors}/>
+              <FormErrors errors={errors} />
             </form>
           </div>
         </div>
