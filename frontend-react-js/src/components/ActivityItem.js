@@ -20,7 +20,6 @@ const navigate = useNavigate()
 
 let expanded_meta ;
 if (props.expanded === true){
-  '1:56 PM May 23, 2023'
 }
 const attrs = {}
 let item 
