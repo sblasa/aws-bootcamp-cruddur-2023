@@ -18,31 +18,22 @@ const navigate = useNavigate()
 
   }
 
-let expanded_meta ;
-if (props.expanded === true){
-}
-const attrs = {}
-let item 
-if(props.expanded === true){
-  attrs.className = 'activity_item expanded'
 
-} else {
+  const attrs = {}
   attrs.className = 'activity_item clickable'
   attrs.onClick = click
-}
 
-return (
+  return (
     <div {...attrs}>
-    <div className="acitivty_main">
-    <ActivityContent activity={props.activity} />
-    {expanded_meta}
-    <div className="activity_actions">
-      <ActivityActionReply setReplyActivity={props.setReplyActivity} activity={props.activity} setPopped={props.setPopped} activity_uuid={props.activity.uuid} count={props.activity.replies_count}/>
-      <ActivityActionRepost activity_uuid={props.activity.uuid} count={props.activity.reposts_count}/>
-      <ActivityActionLike activity_uuid={props.activity.uuid} count={props.activity.likes_count}/>
-      <ActivityActionShare activity_uuid={props.activity.uuid} />
+      <div className="acitivty_main">
+        <ActivityContent activity={props.activity} />
+        <div className="activity_actions">
+          <ActivityActionReply setReplyActivity={props.setReplyActivity} activity={props.activity} setPopped={props.setPopped} activity_uuid={props.activity.uuid} count={props.activity.replies_count}/>
+          <ActivityActionRepost activity_uuid={props.activity.uuid} count={props.activity.reposts_count}/>
+          <ActivityActionLike activity_uuid={props.activity.uuid} count={props.activity.likes_count}/>
+          <ActivityActionShare activity_uuid={props.activity.uuid} />
+        </div>
+      </div>
     </div>
-  </div>
-</div>
-);
+  )
 }
