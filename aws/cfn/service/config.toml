@@ -6,4 +6,4 @@ stack_name = 'CrdSrvBackendFlask'
 [parameters]
 EnvFrontendUrl = 'https://mocharoll.cloud'
 EnvBackendUrl = 'https://api.mocharoll.cloud'
-DDBMessageTable = 'CrdDdb-DynamoDBTable-HHRLUEK5EF5'
+DDBMessageTable = 'CrdDdb-DynamoDBTable-HHRLUEK5EF5C'
